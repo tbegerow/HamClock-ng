@@ -1,0 +1,281 @@
+
+This script will install HamClock on Raspberry Pi OS.
+
+asking: Proceed?
+answer: y
+
+A transcript of this installation may be found in /home/sysop/install-hc-rpi.log
+HamClock installation begins at  Sa 10. Jan 14:04:33 UTC 2026
+os-release
+PRETTY_NAME="Raspbian GNU/Linux 13 (trixie)"
+NAME="Raspbian GNU/Linux"
+VERSION_ID="13"
+VERSION="13 (trixie)"
+VERSION_CODENAME=trixie
+DEBIAN_VERSION_FULL=13.1
+ID=raspbian
+ID_LIKE=debian
+HOME_URL="http://www.raspbian.org/"
+SUPPORT_URL="http://www.raspbian.org/RaspbianForums"
+BUG_REPORT_URL="http://www.raspbian.org/RaspbianBugs"
+uname
+Linux HAMClock2 6.12.62+rpt-rpi-v7 #1 SMP Raspbian 1:6.12.62-1+rpt1 (2025-12-18) armv7l GNU/Linux
+free -m
+              gesamt       benutzt     frei      gemns.  Puffer/Cache verfügbar
+Speicher:        921         262         234          20         496         658
+Swap:            920           0         920
+df
+Dateisystem    1K-Blöcke Benutzt Verfügbar Verw% Eingehängt auf
+udev              331952       0    331952    0% /dev
+tmpfs             188628    4240    184388    3% /run
+/dev/mmcblk0p2  14715548 5613268   8438680   40% /
+tmpfs             471560       8    471552    1% /dev/shm
+tmpfs               5120      12      5108    1% /run/lock
+tmpfs               1024       0      1024    0% /run/credentials/systemd-journald.service
+tmpfs             471564       4    471560    1% /tmp
+/dev/mmcblk0p1    522230   97490    424740   19% /boot/firmware
+tmpfs               1024       0      1024    0% /run/credentials/serial-getty@ttyAMA0.service
+tmpfs               1024       0      1024    0% /run/credentials/getty@tty1.service
+tmpfs              94312      72     94240    1% /run/user/1000
+ping home
+PING clearskyinstitute.com (72.167.43.150) 56(84) bytes of data.
+64 bytes from 150.43.167.72.host.secureserver.net (72.167.43.150): icmp_seq=1 ttl=42 time=165 ms
+64 bytes from 150.43.167.72.host.secureserver.net (72.167.43.150): icmp_seq=2 ttl=42 time=161 ms
+64 bytes from 150.43.167.72.host.secureserver.net (72.167.43.150): icmp_seq=3 ttl=42 time=161 ms
+
+--- clearskyinstitute.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 161.343/162.605/165.041/1.722 ms
+
+Installing required helper packages ...
+OK:1 http://archive.raspberrypi.com/debian trixie InRelease
+OK:2 http://raspbian.raspberrypi.com/raspbian trixie InRelease
+Paketlisten werden gelesen…
+Paketlisten werden gelesen…
+Abhängigkeitsbaum wird aufgebaut…
+Statusinformationen werden eingelesen…
+make ist schon die neueste Version (4.4.1-2).
+g++ ist schon die neueste Version (4:14.2.0-1+rpi1).
+libx11-dev ist schon die neueste Version (2:1.8.12-1).
+x11-utils ist schon die neueste Version (7.7+7).
+xserver-xorg ist schon die neueste Version (1:7.7+24+deb13u1).
+linux-libc-dev ist schon die neueste Version (1:6.12.62-1+rpt1).
+gpiod ist schon die neueste Version (2.2.1-2+rpi1).
+libgpiod-dev ist schon die neueste Version (2.2.1-2+rpi1).
+curl ist schon die neueste Version (8.14.1-2+deb13u2).
+openssl ist schon die neueste Version (3.5.4-1~deb13u1+rpt1).
+xdg-utils ist schon die neueste Version (1.2.1-2).
+0 aktualisiert, 0 neu installiert, 0 zu entfernen und 0 nicht aktualisiert.
+
+Downloading https://clearskyinstitute.com/ham/HamClock/ESPHamClock.tgz ...
+
+Exploding ESPHamClock.tgz into ESPHamClock ...
+
+asking: build for web access only (no hardware display)?
+answer: n
+
+Display size appears to be 1920x1080.
+
+Building hamclock-1600x960 ...
+running make hamclock-1600x960
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o BME280.o BME280.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o ESPHamClock.o ESPHamClock.cpp
+ESPHamClock.cpp: In function ‘void drawVersion(bool)’:
+ESPHamClock.cpp:1294:56: warning: format ‘%ld’ expects argument of type ‘long int’, but argument 4 has type ‘time_t’ {aka ‘long long int’} [-Wformat=]
+ 1294 |                 Serial.printf ("auto upgrading to %s %ld > %ld hour %d\n",
+      |                                                      ~~^
+      |                                                        |
+      |                                                        long int
+      |                                                      %lld
+ 1295 |                                                     new_version, now, next_check, hour(now+getTZ(de_tz)));
+      |                                                                  ~~~
+      |                                                                  |
+      |                                                                  time_t {aka long long int}
+ESPHamClock.cpp:1294:62: warning: format ‘%ld’ expects argument of type ‘long int’, but argument 5 has type ‘time_t’ {aka ‘long long int’} [-Wformat=]
+ 1294 |                 Serial.printf ("auto upgrading to %s %ld > %ld hour %d\n",
+      |                                                            ~~^
+      |                                                              |
+      |                                                              long int
+      |                                                            %lld
+ 1295 |                                                     new_version, now, next_check, hour(now+getTZ(de_tz)));
+      |                                                                       ~~~~~~~~~~
+      |                                                                       |
+      |                                                                       time_t {aka long long int}
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o Germano-Bold-16.o Germano-Bold-16.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o Germano-Bold-30.o Germano-Bold-30.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o Germano-Regular-16.o Germano-Regular-16.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o OTAupdate.o OTAupdate.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o P13.o P13.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o adif.o adif.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o adif_parser.o adif_parser.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o asknewpos.o asknewpos.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o astro.o astro.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o bands.o bands.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o blinker.o blinker.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o bmp.o bmp.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o brightness.o brightness.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o cachefile.o cachefile.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o callsign.o callsign.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o clocks.o clocks.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o cities.o cities.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o color.o color.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o configs.o configs.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o contests.o contests.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o cputemp.o cputemp.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o debug.o debug.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o drawextra.o drawextra.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o dxcluster.o dxcluster.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o dxpeds.o dxpeds.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o dxpeds_hide.o dxpeds_hide.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o earthmap.o earthmap.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o earthsat.o earthsat.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o emetool.o emetool.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o favicon.o favicon.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o fsfree.o fsfree.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o gimbal.o gimbal.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o gpsd.o gpsd.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o grayline.o grayline.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o kd3tree.o kd3tree.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o infobox.o infobox.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o liveweb.o liveweb.cpp
+liveweb.cpp: In function ‘void updateExistingClient(ws_cli_conn_t*)’:
+liveweb.cpp:199:84: warning: format ‘%ld’ expects argument of type ‘long int’, but argument 4 has type ‘__time64_t’ {aka ‘long long int’} [-Wformat=]
+  199 |         Serial.printf ("LIVE: client %s: copying img and reading new pixels took %ld usec\n",
+      |                                                                                  ~~^
+      |                                                                                    |
+      |                                                                                    long int
+      |                                                                                  %lld
+liveweb.cpp:334:79: warning: format ‘%ld’ expects argument of type ‘long int’, but argument 6 has type ‘__time64_t’ {aka ‘long long int’} [-Wformat=]
+  334 |         Serial.printf ("LIVE: client %s: built %d regions from %d blocks in %ld usec\n",
+      |                                                                             ~~^
+      |                                                                               |
+      |                                                                               long int
+      |                                                                             %lld
+liveweb.cpp:369:79: warning: format ‘%ld’ expects argument of type ‘long int’, but argument 5 has type ‘__time64_t’ {aka ‘long long int’} [-Wformat=]
+  369 |         Serial.printf ("LIVE: client %s: write hdr %d bytes and update took %ld usec\n",
+      |                                                                             ~~^
+      |                                                                               |
+      |                                                                               long int
+      |                                                                             %lld
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o liveweb-html.o liveweb-html.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o magdecl.o magdecl.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o maidenhead.o maidenhead.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o mapmanage.o mapmanage.cpp
+mapmanage.cpp: In function ‘bool installFilePixels(const char*, const char*)’:
+mapmanage.cpp:200:56: warning: format ‘%ld’ expects argument of type ‘long int’, but argument 3 has type ‘__time64_t’ {aka ‘long long int’} [-Wformat=]
+  200 |                 Serial.printf ("gray conversion took %ld us\n",
+      |                                                      ~~^
+      |                                                        |
+      |                                                        long int
+      |                                                      %lld
+  201 |                                             (tv1.tv_sec-tv0.tv_sec)*1000000 + (tv1.tv_usec - tv0.tv_usec));
+      |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                             |
+      |                                                                             __time64_t {aka long long int}
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o menu.o menu.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o moon_imgs.o moon_imgs.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o moonpane.o moonpane.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o ncdxf.o ncdxf.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o nmea.o nmea.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o nvram.o nvram.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o ontheair.o ontheair.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o parsespot.o parsespot.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o passwd.o passwd.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o plot.o plot.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o plotmap.o plotmap.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o plotmgmnt.o plotmgmnt.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o prefixes.o prefixes.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o pskreporter.o pskreporter.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o qrz.o qrz.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o radio.o radio.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o robinson.o robinson.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o rss.o rss.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o runner.o runner.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o santa.o santa.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o sattool.o sattool.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o scrollbar.o scrollbar.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o scrollstate.o scrollstate.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o sdo.o sdo.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o selectFont.o selectFont.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o setup.o setup.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o sevenseg.o sevenseg.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o spacewx.o spacewx.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o sphere.o sphere.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o spots.o spots.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o stopwatch.o stopwatch.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o string.o string.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o tooltip.o tooltip.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o touch.o touch.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o tz.o tz.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o version.o version.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o webserver.o webserver.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o watchlist.o watchlist.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o wifi.o wifi.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o wifimeter.o wifimeter.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o wx.o wx.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o zones.o zones.cpp
+make -C ArduinoLib libarduino.a
+make[1]: Verzeichnis „/home/sysop/ESPHamClock/ArduinoLib“ wird betreten
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o Adafruit_BME280.o Adafruit_BME280.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o Adafruit_LTR329_LTR303.o Adafruit_LTR329_LTR303.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o Adafruit_MCP23X17.o Adafruit_MCP23X17.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o Adafruit_RA8875.o Adafruit_RA8875.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o Arduino.o Arduino.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o CourierPrimeSans6.o CourierPrimeSans6.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o DateStrings.o DateStrings.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o EEPROM.o EEPROM.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o ESP.o ESP.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o ESP8266WiFi.o ESP8266WiFi.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o ESP8266httpUpdate.o ESP8266httpUpdate.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o Serial.o Serial.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o SPI.o SPI.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o Time.o Time.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o WiFiClient.o WiFiClient.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o WiFiServer.o WiFiServer.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o WiFiUdp.o WiFiUdp.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o Wire.o Wire.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o i2cdriver.o i2cdriver.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o passwords.o passwords.cpp
+rm -f libarduino.a
+ar r libarduino.a Adafruit_BME280.o Adafruit_LTR329_LTR303.o Adafruit_MCP23X17.o Adafruit_RA8875.o Arduino.o CourierPrimeSans6.o DateStrings.o EEPROM.o ESP.o ESP8266WiFi.o ESP8266httpUpdate.o Serial.o SPI.o Time.o WiFiClient.o WiFiServer.o WiFiUdp.o Wire.o i2cdriver.o passwords.o
+ar: creating libarduino.a
+ranlib libarduino.a
+make[1]: Verzeichnis „/home/sysop/ESPHamClock/ArduinoLib“ wird verlassen
+make -C wsServer libws.a
+make[1]: Verzeichnis „/home/sysop/ESPHamClock/wsServer“ wird betreten
+g++ src/base64.cpp -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960 -Iinclude -c -o src/base64.o
+g++ src/handshake.cpp -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960 -Iinclude -c -o src/handshake.o
+g++ src/sha1.cpp -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960 -Iinclude -c -o src/sha1.o
+g++ src/utf8.cpp -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960 -Iinclude -c -o src/utf8.o
+g++ src/ws.cpp -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960 -Iinclude -c -o src/ws.o
+ar r libws.a src/base64.o src/handshake.o src/sha1.o src/utf8.o src/ws.o
+ar: creating libws.a
+make[1]: Verzeichnis „/home/sysop/ESPHamClock/wsServer“ wird verlassen
+make -C zlib-hc libzlib-hc.a
+make[1]: Verzeichnis „/home/sysop/ESPHamClock/zlib-hc“ wird betreten
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o adler32.o adler32.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o crc32.o crc32.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o deflate.o deflate.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o infback.o infback.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o inffast.o inffast.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o inflate.o inflate.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o inftrees.o inftrees.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o trees.o trees.cpp
+g++ -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17 -D_USE_X11 -D_CLOCK_1600x960   -c -o zutil.o zutil.cpp
+ar rc libzlib-hc.a adler32.o crc32.o deflate.o infback.o inffast.o inflate.o inftrees.o trees.o zutil.o
+ranlib libzlib-hc.a
+make[1]: Verzeichnis „/home/sysop/ESPHamClock/zlib-hc“ wird verlassen
+g++ -LArduinoLib -LwsServer -Lzlib-hc -g -pthread BME280.o ESPHamClock.o Germano-Bold-16.o Germano-Bold-30.o Germano-Regular-16.o OTAupdate.o P13.o adif.o adif_parser.o asknewpos.o astro.o bands.o blinker.o bmp.o brightness.o cachefile.o callsign.o clocks.o cities.o color.o configs.o contests.o cputemp.o debug.o drawextra.o dxcluster.o dxpeds.o dxpeds_hide.o earthmap.o earthsat.o emetool.o favicon.o fsfree.o gimbal.o gpsd.o grayline.o kd3tree.o infobox.o liveweb.o liveweb-html.o magdecl.o maidenhead.o mapmanage.o menu.o moon_imgs.o moonpane.o ncdxf.o nmea.o nvram.o ontheair.o parsespot.o passwd.o plot.o plotmap.o plotmgmnt.o prefixes.o pskreporter.o qrz.o radio.o robinson.o rss.o runner.o santa.o sattool.o scrollbar.o scrollstate.o sdo.o selectFont.o setup.o sevenseg.o spacewx.o sphere.o spots.o stopwatch.o string.o tooltip.o touch.o tz.o version.o webserver.o watchlist.o wifi.o wifimeter.o wx.o zones.o -o hamclock-1600x960 -lpthread -larduino -lzlib-hc -lws -lgpiod -lX11
+
+asking: install HamClock desktop icon?
+answer: y
+
+asking: install User Guide on desktop?
+answer: y
+
+asking: start HamClock automatically each time Pi is booted?
+answer: y
+
+HamClock installation is complete.
+
+You may run now run HamClock by typing hamclock.
