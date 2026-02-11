@@ -89,3 +89,27 @@ Version/OTA backend | GitHub Releases or custom server | avoid clearskyinstitute
 Map tiles | OpenStreetMap / other tile servers | needs config
 Solar/NOAA | NOAA APIs with updated endpoints | replace hardcoded calls
 Spots/Propagation | DX cluster + PSK reporter maintained services | integration shift
+
+---
+
+## Satellite tracking (ISS, amateur satellites)
+
+Status: ❌ broken  
+Reason: backend no longer provides fresh TLE data  
+Symptom: "Epoch out of date" error
+
+---
+
+## Satellite data (TLE)
+
+HamClock previously downloaded satellite TLE data from a proprietary backend
+service hosted by clearskyinstitute.com.
+
+As this backend is no longer available, satellite tracking requires one of:
+
+- manually provided TLEs via `user-esats.txt`
+- a future replacement backend
+- direct download from public TLE sources (e.g. Celestrak, AMSAT)
+
+Without updated TLE data, satellite tracking (e.g. ISS) will report:
+"Epoch is out of date".
