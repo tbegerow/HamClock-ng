@@ -113,3 +113,14 @@ As this backend is no longer available, satellite tracking requires one of:
 
 Without updated TLE data, satellite tracking (e.g. ISS) will report:
 "Epoch is out of date".
+
+HamClock supports user-supplied TLEs via `user-esats.txt`.
+
+This file takes precedence over any backend-provided satellite data.
+
+Recommended public TLE sources:
+- Celestrak (https://celestrak.org)
+- AMSAT
+- Space-Track.org (account required)
+
+The Moon is calculated internally and does not require TLE data.
