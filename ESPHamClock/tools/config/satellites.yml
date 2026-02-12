@@ -1,0 +1,23 @@
+satellites:
+  - name: ACS3
+    match: "ACS3"
+    sources: [amsat]
+
+  - name: AO-7
+    match: "AO-7"
+    sources: [amsat, amateur]
+
+  - name: AO-27
+    match: "AO-27"
+    sources: [amsat]
+
+  - name: AO-73
+    match: "AO-73"
+    sources: [amsat, amateur]
+
+  - name: ISS
+    match: "ISS"
+    sources: [amsat, stations]
+
+  - name: Moon
+    special: moon
