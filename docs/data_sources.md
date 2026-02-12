@@ -124,3 +124,10 @@ Recommended public TLE sources:
 - Space-Track.org (account required)
 
 The Moon is calculated internally and does not require TLE data.
+
+TLE data is fetched from:
+- AMSAT (https://www.amsat.org)
+- Celestrak (https://celestrak.org)
+
+TLE data is public-domain or redistributed under the original providers' terms.
+No guarantees are made regarding accuracy or availability.
