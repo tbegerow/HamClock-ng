@@ -1,4 +1,5 @@
 satellites:
+
   - name: ACS3
     match: "ACS3"
     sources: [amsat]
@@ -15,9 +16,145 @@ satellites:
     match: "AO-73"
     sources: [amsat, amateur]
 
+  - name: AO-95
+    match: "AO-95"
+    sources: [amsat]
+
+  - name: AO-123
+    match: "AO-123"
+    sources: [amsat]
+
+  - name: CAS-9
+    match: "CAS-9"
+    sources: [amsat]
+
+  - name: CO-55
+    match: "CO-55"
+    sources: [amsat]
+
+  - name: CO-65
+    match: "CO-65"
+    sources: [amsat]
+
+  - name: FO-29
+    match: "FO-29"
+    sources: [amsat]
+
+  - name: FOX-1B
+    match: "FOX-1B"
+    sources: [amsat]
+
+  - name: GO-32
+    match: "GO-32"
+    sources: [amsat]
+
+  - name: HADES-R
+    match: "HADES-R"
+    sources: [amsat]
+
+  - name: HOPE-1
+    match: "HOPE-1"
+    sources: [amsat]
+
+  - name: ISAT
+    match: "ISAT"
+    sources: [amsat]
+
   - name: ISS
     match: "ISS"
     sources: [amsat, stations]
+
+  - name: JO-97
+    match: "JO-97"
+    sources: [amsat]
+
+  - name: JPSS-1
+    match: "JPSS-1"
+    sources: [stations]
+
+  - name: LILACSAT
+    match: "LILACSAT"
+    sources: [amsat]
+
+  - name: LO-19
+    match: "LO-19"
+    sources: [amsat]
+
+  - name: LO-74
+    match: "LO-74"
+    sources: [amsat]
+
+  - name: NO-44
+    match: "NO-44"
+    sources: [amsat]
+
+  - name: PO-101
+    match: "PO-101"
+    sources: [amsat]
+
+  - name: QO-100
+    match: "QO-100"
+    sources: [amsat]
+
+  - name: ROBUSTA-
+    match: "ROBUSTA"
+    sources: [amsat]
+
+  - name: RS30
+    match: "RS30"
+    sources: [amsat]
+
+  - name: RS38S
+    match: "RS38S"
+    sources: [amsat]
+
+  - name: RS-44
+    match: "RS-44"
+    sources: [amsat]
+
+  - name: SO-50
+    match: "SO-50"
+    sources: [amsat]
+
+  - name: SONATE-2
+    match: "SONATE-2"
+    sources: [amsat]
+
+  - name: SPARROW
+    match: "SPARROW"
+    sources: [amsat]
+
+  - name: STRAND-1
+    match: "STRAND-1"
+    sources: [amsat]
+
+  - name: SWISSCUB
+    match: "SWISSCUB"
+    sources: [amsat]
+
+  - name: TECHNOSA
+    match: "TECHNOSA"
+    sources: [amsat]
+
+  - name: TIANHE
+    match: "TIANHE"
+    sources: [stations]
+
+  - name: UKUBE-1
+    match: "UKUBE-1"
+    sources: [amsat]
+
+  - name: UMKA_1
+    match: "UMKA_1"
+    sources: [amsat]
+
+  - name: UNISAT-6
+    match: "UNISAT-6"
+    sources: [amsat]
+
+  - name: UO-11
+    match: "UO-11"
+    sources: [amsat]
 
   - name: Moon
     special: moon
