@@ -11,9 +11,9 @@ fetch_sources
 
 echo "→ Building esats.txt..."
 
-yq -r '.satellites[] | "\(.name)|\(.match)|\(.sources[0] // "")|\(.sources[1] // "")|SPECIAL=\(.special // "")"' "$CFG" \
+yq -r '.satellites[] | "\(.name)|\(.match)|\(.sources[0] // "")|\(.sources[1] // "")|\(.special // "")"' "$CFG" \
 | while IFS="|" read -r name pattern s1 s2 special; do
-    if [[ "$special" == "moon" ]]; then
+    if [[ "$special" == *"moon"* ]]; then
         moon_tle >> "$TMP"
         continue
     fi
@@ -35,6 +35,6 @@ NR%3==1 {
 keep { print }
 ' "$TMP" > "$OUT"
 
-#rm -f "$TMP"
+rm -f "$TMP"
 
 echo "✓ Written $(wc -l < "$OUT") lines to esats.txt"
