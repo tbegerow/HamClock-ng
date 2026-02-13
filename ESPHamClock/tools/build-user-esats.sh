@@ -1,77 +1,64 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-CFG="$BASE_DIR/config/satellites.yml"
-DATA_DIR="$BASE_DIR/data"
-OUT="$HOME/.hamclock/user-esats.txt"
-
 source "$(dirname "$0")/tle-lib.sh"
 
-mkdir -p "$(dirname "$OUT")"
-: > "$OUT"
+HAMCLOCK_DIR="$HOME/.hamclock/"
+CFG_USER="$BASE_DIR/tools/config/user-satellites.yml"
+OUT="$HAMCLOCK_DIR/user-esats.txt"
+TMP="$(mktemp)"
 
 fetch_sources
+: > "$TMP"
 
-echo "HamClock-ng – User TLE Generator"
-echo "Output: $OUT"
-echo
+echo "→ Building user-esats.txt..."
 
-# YAML sehr bewusst simpel parsen
-current_name=""
-current_match=""
-current_sources=""
+yq -r '.satellites[] |
+  "\(.name)|\(.match // "")|\(.sources[0] // "")|\(.sources[1] // "")|\(.special // "")"' \
+  "$CFG_USER" \
+| while IFS="|" read -r name pattern source special; do
 
-while read -r line; do
-  case "$line" in
-    "  - name:"*)
-      current_name="${line#*: }"
-      ;;
-    "    match:"*)
-      current_match="${line#*: }"
-      ;;
-    "    sources:"*)
-      current_sources="$(echo "$line" | tr -d '[],' | cut -d: -f2)"
-      ;;
-    "    special:"*)
-      if [[ "${line#*: }" == "moon" ]]; then
-        echo "Adding Moon"
-        moon_tle >> "$OUT"
-      fi
-      ;;
-    "")
-      [[ -z "$current_name" ]] && continue
+    if [[ "$special" == *"moon"* ]]; then
+        echo "  → Adding Moon"
+        moon_tle >> "$TMP"
+        continue
+    fi
 
-      echo
-      echo "$current_name:"
-      echo "  0) none"
+    if [[ -z "$pattern" || -z "$source" ]]; then
+        echo "  ⚠ Skipping $name (incomplete config)"
+        continue
+    fi
 
-      i=1
-      for src in $current_sources; do
-        echo "  $i) $src"
-        ((i++))
-      done
+    file="$DATA_DIR/$source.txt"
+    if [[ ! -f "$file" ]]; then
+        echo "  ⚠ Source not found: $source"
+        continue
+    fi
 
-      read -rp "Select [0]: " sel
-      sel="${sel:-0}"
+    if extract_tle "$pattern" "$file" >> "$TMP"; then
+        echo "  ✓ Added $name from $source"
+    else
+        echo "  ⚠ No TLE found for $name ($pattern)"
+    fi
+done
 
-      if [[ "$sel" != "0" ]]; then
-        chosen=$(echo "$current_sources" | awk "{print \$$sel}")
-        file="$DATA_DIR/$chosen.txt"
+# Duplikate entfernen
+gawk '
+NR%3==1 {
+  if (!seen[$0]++) keep=1
+  else keep=0
+}
+keep { print }
+' "$TMP" > "$OUT"
 
-        if extract_tle "$current_match" "$file" >> "$OUT"; then
-          echo "  ✓ added from $chosen"
-        else
-          echo "  ✗ not found in $chosen"
-        fi
-      fi
+rm -f "$TMP"
 
-      current_name=""
-      current_match=""
-      current_sources=""
-      ;;
-  esac
-done < "$CFG"
+LINES=$(wc -l < "$OUT" || echo 0)
 
-echo
-echo "Done. Written $(wc -l < "$OUT") lines."
+if [[ "$LINES" -eq 0 ]]; then
+    echo "✗ user-esats.txt is empty – aborting"
+    exit 1
+fi
+
+echo "✓ Written $LINES lines to $OUT"
+echo "ℹ Some historical satellites are no longer published by AMSAT"
