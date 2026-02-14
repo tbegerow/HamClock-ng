@@ -3,7 +3,7 @@ set -euo pipefail
 
 source "$(dirname "$0")/tle-lib.sh"
 
-HAMCLOCK_DIR="$HOME/.hamclock/"
+HAMCLOCK_DIR="$HOME/.hamclock"
 CFG_USER="$BASE_DIR/tools/config/user-satellites.yml"
 OUT="$HAMCLOCK_DIR/user-esats.txt"
 TMP="$(mktemp)"
