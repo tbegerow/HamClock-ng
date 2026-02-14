@@ -13,9 +13,16 @@ fetch_sources
 
 echo "→ Building user-esats.txt..."
 
-yq -r '.satellites[] |
-  "\(.name)|\(.match // "")|\(.sources[0] // "")|\(.sources[1] // "")|\(.special // "")"' \
-  "$CFG_USER" \
+yq -r '
+.satellites[] |
+[
+  .name,
+  .match,
+  (.sources[0] // ""),
+  (.sources[1] // ""),
+  ("SPECIAL=" + (.special // ""))
+] | join("|")
+' "$CFG_USER" \
 | while IFS="|" read -r name pattern source special; do
 
     if [[ "$special" == *"moon"* ]]; then

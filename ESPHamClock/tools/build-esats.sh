@@ -11,8 +11,16 @@ fetch_sources
 
 echo "→ Building esats.txt..."
 
-yq -r '.satellites[] | "\(.name)|\(.match)|\(.sources[0] // "")|\(.sources[1] // "")|\(.special // "")"' "$CFG" \
-| while IFS="|" read -r name pattern s1 s2 special; do
+yq -r '
+.satellites[] |
+[
+  .name,
+  .match,
+  (.sources[0] // ""),
+  (.sources[1] // ""),
+  (.special // "")
+] | join("|")
+' "$CFG" | while IFS="|" read -r name pattern s1 s2 special; do
     if [[ "$special" == *"moon"* ]]; then
         moon_tle >> "$TMP"
         continue
