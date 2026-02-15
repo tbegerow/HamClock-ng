@@ -132,6 +132,8 @@ inform Installing required helper packages ...
 PKGS="\
     make \
     g++ \
+    yq \
+    gawk \
     libx11-dev \
     x11-utils \
     xserver-xorg \

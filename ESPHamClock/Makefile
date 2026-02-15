@@ -16,6 +16,11 @@
 CXXFLAGS = -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -std=c++17
 # CXXFLAGS += -Wextra -pedantic -Werror -Wno-attributes -Wno-unknown-pragmas
 
+# HamClock-NG version (can be overridden from command line)
+HAMCLOCK_VERSION ?= 4.22-ng
+
+CXXFLAGS += -DHAMCLOCK_VERSION=\"$(HAMCLOCK_VERSION)\"
+
 # add explicit framebuffer depth as _FB_DEPTH if defined
 ifdef FB_DEPTH
     CXXFLAGS += -D_FB_DEPTH=$(FB_DEPTH)
