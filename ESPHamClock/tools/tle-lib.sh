@@ -2,9 +2,9 @@
 set -euo pipefail
 
 TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CFG="$TOOLS_DIR/config/satellites.yml"
 DATA_DIR="$TOOLS_DIR/data"
 BASE_DIR="$(cd "$TOOLS_DIR/.." && pwd)"
+CFG="$DATA_DIR/satellites.yml"
 TLE_LOG="$BASE_DIR/tle.log"
 
 mkdir -p "$DATA_DIR"
@@ -12,15 +12,17 @@ mkdir -p "$DATA_DIR"
 fetch_sources() {
   echo "→ Fetching TLE sources..."
 
-  for url in \
-      "https://www.amsat.org/tle/current/dailytle.txt:$DATA_DIR/amsat.txt" \
-      "https://celestrak.org/NORAD/elements/gp.php?GROUP=amateur&FORMAT=tle:$DATA_DIR/amateur.txt" \
-      "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle:$DATA_DIR/stations.txt"
-  do
-      IFS=":" read -r u f <<<"$url"
-      curl -A "Mozilla/5.0" -fsSL --connect-timeout 10 --max-time 30 "$url" -o "$f" \
-          || echo "Warning: could not fetch $u" >>"$TLE_LOG"
-  done
+  while read -r u f; do
+      rm -f "$f"
+      echo "  → Fetching $u"
+      if ! curl -A "Mozilla/5.0" -fsSL --connect-timeout 10 --max-time 30 "$u" -o "$f"; then
+          echo "Warning: could not fetch $u" >>"$TLE_LOG"
+      fi
+  done <<EOF
+https://www.amsat.org/tle/current/dailytle.txt        $DATA_DIR/amsat.txt
+https://celestrak.org/NORAD/elements/gp.php?GROUP=amateur&FORMAT=tle   $DATA_DIR/amateur.txt
+https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle  $DATA_DIR/stations.txt
+EOF
 }
 
 extract_tle() {
