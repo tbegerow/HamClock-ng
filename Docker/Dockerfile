@@ -20,6 +20,11 @@ ENV FLRIG_PORT="12345"
 ENV FLRIG_HOST="localhost"
 ENV USE_FLRIG="0"
 ENV USE_METRIC="1"
+ENV HAMCLOCK_BACKEND_ENABLED="0"
+ENV HAMCLOCK_USE_REMOTE_BACKEND="0"
+ENV HAMCLOCK_DATA_HOST="localhost"
+ENV HAMCLOCK_DATA_PORT="80"
+ENV HAMCLOCK_DATA_BASEPATH="/"
 
 USER root
 
@@ -48,8 +53,13 @@ WORKDIR /hamclock
 
 # Download HamClock source
 # Sort-of following Desktop build steps from https://www.clearskyinstitute.com/ham/HamClock/
-RUN curl -O https://raw.githubusercontent.com/tbegerow/HamClock-ng/main/dist/ESPHamClock.tgz
-RUN tar xf ESPHamClock.tgz && \
+#RUN curl -O https://raw.githubusercontent.com/tbegerow/HamClock-ng/main/dist/ESPHamClock.tgz
+COPY ESPHamClock.tgz ESPHamClock.tgz
+RUN ls -lh ESPHamClock.tgz && \
+    test -s ESPHamClock.tgz && \
+    tar tzf ESPHamClock.tgz > /dev/null
+
+RUN tar xf ESPHamClock.tgz && > /dev/null \
     rm ESPHamClock.tgz
 WORKDIR /hamclock/ESPHamClock
 
@@ -63,6 +73,8 @@ RUN sed -i 's/-O3/-O2/g' Makefile
 RUN make -j 4 hamclock-web-${HAMCLOCK_RESOLUTION}
 RUN make install
 
+RUN ls -l /usr/local/bin && which hamclock || true
+
 RUN /usr/local/bin/hamclock >/dev/null 2>&1 & \
     PID=$! && \
     sleep 15 && \
@@ -70,7 +82,7 @@ RUN /usr/local/bin/hamclock >/dev/null 2>&1 & \
 
 # Install hceeprom to hamclock directory
 RUN cd /hamclock/ESPHamClock && \
-    curl -O curl -O https://raw.githubusercontent.com/tbegerow/HamClock-ng/main/Docker/hceeprom.pl
+    curl -O https://raw.githubusercontent.com/tbegerow/HamClock-ng/main/Docker/hceeprom.pl
 WORKDIR /hamclock/ESPHamClock
 RUN chmod +x hceeprom.pl
 
