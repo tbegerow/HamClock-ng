@@ -18,7 +18,7 @@ CXXFLAGS = -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -
 
 # HamClock-NG version (can be overridden from command line)
 #HAMCLOCK_VERSION ?= 4.23-ng
-HAMCLOCK_VERSION := $(shell cat ../dist/version.txt)
+HAMCLOCK_VERSION := $(shell cat version.txt)
 
 CXXFLAGS += -DHAMCLOCK_VERSION=\"$(HAMCLOCK_VERSION)\"
 

@@ -6,9 +6,12 @@ REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 SRC_DIR="$REPO_ROOT/ESPHamClock"
 OUT_DIR="$REPO_ROOT/dist"
-TARBALL="$OUT_DIR/ESPHamClock.tgz"
+#TARBALL="$OUT_DIR/ESPHamClock.tgz"
+VERSION="$(cat "$SRC_DIR/version.txt")"
+TARBALL="$OUT_DIR/ESPHamClock-${VERSION}.tgz"
 
 echo "== HamClock-ng tarball builder =="
+echo "Version: $VERSION"
 echo "Source: $SRC_DIR"
 echo "Output: $TARBALL"
 
@@ -33,6 +36,8 @@ tar \
   -czf "$TARBALL" \
   -C "$REPO_ROOT" \
   ESPHamClock
+
+ln -sf "ESPHamClock-${VERSION}.tgz" "$OUT_DIR/ESPHamClock-latest.tgz"
 
 echo "Done."
 echo "Created: $TARBALL"

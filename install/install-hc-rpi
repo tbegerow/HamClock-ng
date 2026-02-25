@@ -150,7 +150,7 @@ if (( $? != 0 )) ; then echo error loading packages; exit 1; fi
 
 # download fresh program source
 TBALL=ESPHamClock.tgz
-TBURL=https://clearskyinstitute.com/ham/HamClock/$TBALL
+TBURL=https://raw.githubusercontent.com/tbegerow/HamClock-ng/main/dist/$TBALL
 rm -f $TBALL
 inform Downloading $TBURL ...
 if ! curl --silent --show-error --output $TBALL $TBURL >> $LOGFN 2>&1 ; then
