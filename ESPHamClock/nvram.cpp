@@ -361,6 +361,13 @@ static const uint8_t nv_sizes[NV_N] = {
     NV_SATNAME_LEN,             // NV_SAT2NAME
     1,                          // NV_PSK_SHOWPATH
 
+    // 240
+    1,                          // NV_BACKEND_ENABLED
+    1,                          // NV_USE_REMOTE_BACKEND
+    NV_DATA_HOST_LEN,           // NV_DATA_HOST
+    2,                          // NV_DATA_PORT
+    NV_DATA_BASEPATH_LEN,       // NV_DATA_BASEPATH
+
 };
 
 

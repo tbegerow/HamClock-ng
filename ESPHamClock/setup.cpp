@@ -4,6 +4,7 @@
 #include <ctype.h>
 
 #include "HamClock.h"
+#include "backend.h"
 
 /* defaults
  */
@@ -3999,7 +4000,8 @@ static void initSetup()
         NVWriteString(NV_WIFI_PASSWD, wifi_pw);
     }
 
-
+    initBackendServer();
+    initBackendClientConfig();
 
     // init call sign, no default
 

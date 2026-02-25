@@ -10,6 +10,7 @@
 
 
 #include "HamClock.h"
+#include "backend.h"
 
 // web socket library
 #include "ws.h"
@@ -850,6 +851,13 @@ static void ws_not (FILE *sockfp, const char *header)
         sendLiveHTML (sockfp);
     else if (strcmp (fn, "favicon.ico") == 0)
         sendLiveFavicon (sockfp);
+    else if (strncmp(fn, "backend/", 8) == 0) {
+        handleBackend(sockfp, fn);
+       // fprintf(sockfp, "HTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\r\n");
+       // fprintf(sockfp, "DEBUG: Backend-Request erreicht: %s\n", fn);
+       // fflush(sockfp); // sendet sofort
+        return;
+    }
     else {
         Serial.printf ("LIVE: unknown GET %s\n", fn);
         fprintf (sockfp, "HTTP/1.0 400 Bad request\r\n");
