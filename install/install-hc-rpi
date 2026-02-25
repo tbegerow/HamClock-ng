@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 # script to install HamClock on RPi
+HC_HOME="$HOME/.hamclock"
+HC_BACKEND="$HC_HOME/backend"
+HC_TOOLS="$HC_HOME/tools"
+HC_LOGS="$HC_HOME/logs"
+TOOLS_SRC="$PWD/tools"
 
+HC_REPO="${HC_REPO:-tbegerow/HamClock-ng}"
+HC_BRANCH="${HC_BRANCH:-main}"
+HC_TARBALL="${HC_TARBALL:-ESPHamClock-latest.tgz}"
+
+TBURL="https://raw.githubusercontent.com/${HC_REPO}/${HC_BRANCH}/dist/${HC_TARBALL}"
 
 # set log file
 LOGFN=$PWD/$(basename $0).log
@@ -152,11 +162,6 @@ if (( $? != 0 )) ; then echo error loading packages; exit 1; fi
 # download fresh program source
 #TBALL=ESPHamClock.tgz
 #TBURL=https://raw.githubusercontent.com/tbegerow/HamClock-ng/main/dist/$TBALL
-HC_REPO=${HC_REPO:-tbegerow/HamClock-ng}
-HC_BRANCH=${HC_BRANCH:-main}
-HC_TARBALL=${HC_TARBALL:-ESPHamClock-latest.tgz}
-
-TBURL="https://raw.githubusercontent.com/${HC_REPO}/${HC_BRANCH}/dist/${HC_TARBALL}"
 
 rm -f $TBALL
 inform Downloading $TBURL ...
@@ -173,6 +178,11 @@ inform Exploding $TBALL into $XDIR ...
 if ! tar xf $TBALL >> $LOGFN 2>&1 ; then inform Error exloding archive -- see $LOGFN; exit 1; fi
 rm $TBALL
 
+mkdir -p "$HC_BACKEND" "$HC_TOOLS" "$HC_LOGS"
+
+if [ -f version.txt ]; then
+    ln -sf "$PWD/version.txt" "$HC_BACKEND/version.txt"
+fi
 
 # cd inside for make
 cd $XDIR
@@ -240,8 +250,53 @@ if ! wait %1 >> $LOGFN 2>&1 ; then inform Build failed -- see $LOGFN; exit 1; fi
 # install
 if ! sudo make install >> $LOGFN 2>&1 ; then inform Install failed -- see $LOGFN; exit 1; fi
 
+inform Installing HamClock helper tools ...
+cp -a "$TOOLS_SRC/"* "$HC_TOOLS/"
+chmod +x "$HC_TOOLS/"*.sh
 
+# default satellites.yaml, falls nicht vorhanden
+if [ ! -f "$HC_HOME/satellites.yaml" ]; then
+    cp "$TOOLS_SRC/config/satellites.yaml" \
+       "$HC_HOME/satellites.yaml"
+fi
 
+echo ""
+echo "TLE handling mode:"
+PS3="Select mode (1-2): "
+select TLEMODE in "backend (use remote backend)" "user (local user-esats)"; do
+    case "$REPLY" in
+        1) HAMCLOCK_TLE_MODE="backend"; break ;;
+        2) HAMCLOCK_TLE_MODE="user"; break ;;
+    esac
+done
+
+if [ "$HAMCLOCK_TLE_MODE" = "user" ]; then
+    inform "Setting up local user-esats generation"
+
+    HC_HOME="$HOME/.hamclock"
+    TOOL="$HC_HOME/tools/build-user-esats.sh"
+
+    # initial run
+    "$TOOL" >> "$HC_HOME/logs/tle.log" 2>&1 || true
+
+    # cron
+    CTBTMP=$(mktemp)
+    crontab -l 2>/dev/null > "$CTBTMP"
+
+    if ! grep -q build-user-esats "$CTBTMP"; then
+        echo "0 */6 * * * $TOOL >> $HC_HOME/logs/tle.log 2>&1" >> "$CTBTMP"
+        crontab "$CTBTMP"
+        inform "Cronjob installed (every 6 hours)"
+    else
+        inform "Cronjob already present"
+    fi
+
+    rm -f "$CTBTMP"
+fi
+
+if [ "$HAMCLOCK_TLE_MODE" = "backend" ]; then
+    inform "Using backend-provided esats.txt (no local generation)"
+fi
 
 # icon?
 if [ -d $HOME/Desktop ] && [ $HC_WEBONLY -eq 0 ] ; then
