@@ -78,7 +78,8 @@ function dumpConfig ()
     df
 
     echo ping home
-    ping -c 3 clearskyinstitute.com
+    PING_HOST=${HAMCLOCK_PING_HOST:-github.com}
+    ping -c 3 "$PING_HOST"
 }
 
 
@@ -149,8 +150,14 @@ if (( $? != 0 )) ; then echo error loading packages; exit 1; fi
 
 
 # download fresh program source
-TBALL=ESPHamClock.tgz
-TBURL=https://raw.githubusercontent.com/tbegerow/HamClock-ng/main/dist/$TBALL
+#TBALL=ESPHamClock.tgz
+#TBURL=https://raw.githubusercontent.com/tbegerow/HamClock-ng/main/dist/$TBALL
+HC_REPO=${HC_REPO:-tbegerow/HamClock-ng}
+HC_BRANCH=${HC_BRANCH:-main}
+HC_TARBALL=${HC_TARBALL:-ESPHamClock-latest.tgz}
+
+TBURL="https://raw.githubusercontent.com/${HC_REPO}/${HC_BRANCH}/dist/${HC_TARBALL}"
+
 rm -f $TBALL
 inform Downloading $TBURL ...
 if ! curl --silent --show-error --output $TBALL $TBURL >> $LOGFN 2>&1 ; then
@@ -257,7 +264,7 @@ if [ -d ~/Desktop ] && [ $HC_WEBONLY -eq 0 ] ; then
     UGFN=HamClockKey.pdf
     DTFN=$HOME/Desktop/$UGFN
     if ask "install User Guide on desktop" ; then
-        UGURL=https://clearskyinstitute.com/ham/HamClock/$UGFN
+        UGURL=${HAMCLOCK_USERGUIDE_URL:-https://clearskyinstitute.com/ham/HamClock/$UGFN}
         if ! curl --silent --show-error --output $DTFN $UGURL >> $LOGFN 2>&1 ; then
             inform Error downloading $UGURL -- see $LOGFN
         fi
