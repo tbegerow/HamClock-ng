@@ -3,19 +3,40 @@ set -e
 
 echo "→ HamClock-NG container starting"
 
-# Export ENV für Perl
+# Export ENV for Perl
 export CALLSIGN CALLSIGN_BACKGROUND_COLOR CALLSIGN_BACKGROUND_RAINBOW CALLSIGN_COLOR
 export LOCATOR LAT LONG UTC_OFFSET VOACAP_MODE VOACAP_POWER
 export FLRIG_HOST FLRIG_PORT USE_FLRIG USE_METRIC
 
-# Default
+# SERVER MODE
+if [ "$HAMCLOCK_BACKEND_ENABLED" = "true" ]; then
+    perl hceeprom.pl NV_BACKEND_ENABLED 1
+else 
+    perl hceeprom.pl NV_BACKEND_ENABLED 0
+fi
+
+# CLIENT MODE
+if [ "$HAMCLOCK_USE_REMOTE_BACKEND" = "true" ]; then
+    perl hceeprom.pl NV_USE_REMOTE_BACKEND 1
+
+    perl hceeprom.pl NV_DATA_HOST "$HAMCLOCK_DATA_HOST"
+    perl hceeprom.pl NV_DATA_PORT "$HAMCLOCK_DATA_PORT"
+    perl hceeprom.pl NV_DATA_BASEPATH "$HAMCLOCK_DATA_BASEPATH"
+else
+    perl hceeprom.pl NV_USE_REMOTE_BACKEND 0
+    perl hceeprom.pl NV_DATA_HOST ""
+    perl hceeprom.pl NV_DATA_PORT 0
+    perl hceeprom.pl NV_DATA_BASEPATH ""
+fi
+
+# TLE-Mode
 HAMCLOCK_TLE_MODE="${HAMCLOCK_TLE_MODE:-backend}"
 
 TOOLS="/hamclock/ESPHamClock/tools"
 
 if [ "$HAMCLOCK_TLE_MODE" = "local" ]; then
   echo "→ Generating TLEs locally"
-  
+
 # Initial build (sonst ist user-esats leer beim ersten Start)
   echo "→ Initial TLE generation"
   "$TOOLS/build-user-esats.sh"
@@ -37,7 +58,7 @@ fi
 CONFIG_DIR=/root/.hamclock/configurations
 mkdir -p "$CONFIG_DIR"
 
-# Falls noch keine .eeprom existiert, kurz HamClock starten
+# starts Hamclock for 20 sec. if .eeprom don't exist
 if [ -z "$(ls -A $CONFIG_DIR/*.eeprom 2>/dev/null)" ]; then
   echo "→ Creating initial eeprom config..."
   /usr/local/bin/hamclock -t 20 &

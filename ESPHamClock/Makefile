@@ -17,7 +17,8 @@ CXXFLAGS = -IArduinoLib -IwsServer/include -Izlib-hc -I. -g -O2 -Wall -pthread -
 # CXXFLAGS += -Wextra -pedantic -Werror -Wno-attributes -Wno-unknown-pragmas
 
 # HamClock-NG version (can be overridden from command line)
-HAMCLOCK_VERSION ?= 4.22-ng
+#HAMCLOCK_VERSION ?= 4.23-ng
+HAMCLOCK_VERSION := $(shell cat ../dist/version.txt)
 
 CXXFLAGS += -DHAMCLOCK_VERSION=\"$(HAMCLOCK_VERSION)\"
 
@@ -82,7 +83,8 @@ OBJS = \
 	adif_parser.o \
 	asknewpos.o \
 	astro.o \
-	bands.o \
+	backend.o \
+        bands.o \
 	blinker.o \
 	bmp.o \
 	brightness.o \

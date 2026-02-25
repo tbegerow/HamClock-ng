@@ -3,7 +3,7 @@
 //const char *hc_version = "4.21";
 
 #ifndef HAMCLOCK_VERSION
-#define HAMCLOCK_VERSION "4.22-ng"
+#define HAMCLOCK_VERSION "dev"
 #endif
 
 const char *hc_version = HAMCLOCK_VERSION;

@@ -685,6 +685,13 @@ typedef enum {
     NV_SAT2NAME,                // satellite 2 name with underscore for each space
     NV_PSK_SHOWPATH,            // whether Live Spots show paths
 
+    // 240
+    NV_BACKEND_ENABLED,         // enbale Backend-Server
+    NV_USE_REMOTE_BACKEND,      // enable Remote-Backend
+    NV_DATA_HOST,               // Remote-Backend-Host (default https://raw.githubusercontent.com/tbegerow/HamClock-ng/main/)
+    NV_DATA_PORT,               // Remote-Backend-Port (default 80)
+    NV_DATA_BASEPATH,           // path to Backend-Files (ex. /backend for HamClock-Backend or /dist for me Github-Repository
+
     NV_N
 
 } NV_Name;
@@ -865,6 +872,9 @@ typedef struct {
     int tz_secs;                        // local - UTC, seconds
 } TZInfo;
 
+#define NV_DATA_HOST_LEN        64      // max length for hostname/URL
+#define NV_DATA_PORT_LEN        6       // max length for Port as String, e.g. "8081"
+#define NV_DATA_BASEPATH_LEN    32      // max length for path, e.g. "/backend"
 
 #define NV_CALLSIGN_LEN         12      // max call sign, including EOS
 #define NV_ONAIR_LEN            30      // max ONAIR text, including EOS

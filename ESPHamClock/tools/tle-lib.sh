@@ -5,20 +5,22 @@ TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CFG="$TOOLS_DIR/config/satellites.yml"
 DATA_DIR="$TOOLS_DIR/data"
 BASE_DIR="$(cd "$TOOLS_DIR/.." && pwd)"
+TLE_LOG="$BASE_DIR/tle.log"
 
 mkdir -p "$DATA_DIR"
 
 fetch_sources() {
   echo "→ Fetching TLE sources..."
 
-  curl -fsSL https://www.amsat.org/tle/current/dailytle.txt \
-    -o "$DATA_DIR/amsat.txt"
-
-  curl -fsSL "https://celestrak.org/NORAD/elements/gp.php?GROUP=amateur&FORMAT=tle" \
-    -o "$DATA_DIR/amateur.txt"
-
-  curl -fsSL "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle" \
-    -o "$DATA_DIR/stations.txt"
+  for url in \
+      "https://www.amsat.org/tle/current/dailytle.txt:$DATA_DIR/amsat.txt" \
+      "https://celestrak.org/NORAD/elements/gp.php?GROUP=amateur&FORMAT=tle:$DATA_DIR/amateur.txt" \
+      "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle:$DATA_DIR/stations.txt"
+  do
+      IFS=":" read -r u f <<<"$url"
+      curl -A "Mozilla/5.0" -fsSL --connect-timeout 10 --max-time 30 "$url" -o "$f" \
+          || echo "Warning: could not fetch $u" >>"$TLE_LOG"
+  done
 }
 
 extract_tle() {

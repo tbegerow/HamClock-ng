@@ -2,11 +2,11 @@
  */
 
 #include "HamClock.h"
-
+//#include "backend.h"
 
 // host name and port of backend server
-const char *backend_host = "clearskyinstitute.com";
-int backend_port = 80;
+//const char *backend_host = "clearskyinstitute.com";  //deprecated
+//int backend_port = 80;
 
 // IP where server thinks we came from
 char remote_addr[16];                           // INET_ADDRSTRLEN

@@ -1,0 +1,19 @@
+# build artifacts
+ESPHamClock/*.o
+ESPHamClock/**/*.o
+ESPHamClock/**/*.a
+
+# generated binaries
+#ESPHamClock/hamclock*
+#ESPCHamClock.tgz
+
+# runtime / generated data
+ESPHamClock/tools/data/*.txt
+ESPHamClock/esats.txt
+ESPHamClock/user-esats.txt
+ESPHamClock/tle.log
+
+# editor / misc
+*.swp
+*.bak
+.DS_Store
