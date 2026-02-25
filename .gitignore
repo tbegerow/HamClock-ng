@@ -14,6 +14,7 @@ ESPHamClock/user-esats.txt
 ESPHamClock/tle.log
 
 # editor / misc
+*.tmp
 *.swp
 *.bak
 .DS_Store
