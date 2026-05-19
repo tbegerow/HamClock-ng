@@ -87,6 +87,32 @@ perl /hamclock/ESPHamClock/hceeprom.pl NV_WEBFS $WEB_FULLSCREEN && \
 perl /hamclock/ESPHamClock/hceeprom.pl NV_SHOWPIP $SHOW_PUBLIC_IP && \
 
 # Start HamClock
-echo "→ Starting HamClock"
-exec /usr/local/bin/hamclock -o
+#echo "→ Starting HamClock"
+#exec /usr/local/bin/hamclock -o
+HAMCLOCK_ARGS="-o"
 
+# Remote backend enabled?
+if [ "${HAMCLOCK_USE_REMOTE_BACKEND:-false}" = "true" ]; then
+
+    # Build backend string from ENV
+    if [ -n "${HAMCLOCK_DATA_HOST:-}" ]; then
+
+        BACKEND="${HAMCLOCK_DATA_HOST}"
+
+        # append port if set
+        if [ -n "${HAMCLOCK_DATA_PORT:-}" ]; then
+            BACKEND="${BACKEND}:${HAMCLOCK_DATA_PORT}"
+        fi
+
+        echo "→ Using backend: $BACKEND"
+
+        HAMCLOCK_ARGS="$HAMCLOCK_ARGS -b $BACKEND"
+
+    else
+        echo "→ Remote backend enabled but no host configured"
+    fi
+fi
+
+echo "→ Starting HamClock: /usr/local/bin/hamclock $HAMCLOCK_ARGS"
+
+exec /usr/local/bin/hamclock $HAMCLOCK_ARGS
